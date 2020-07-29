@@ -1,0 +1,1034 @@
+=========================<GRID LAYOUT WITHOUT .kv FILE>===================================
+
+import kivy
+from kivy.app import App
+from kivy.uix.label import Label
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
+
+
+class MyGrid(GridLayout):
+    def __init__(self, **kwargs):
+        super(MyGrid, self).__init__(**kwargs)
+        self.cols = 1
+
+        self.inside = GridLayout()
+        self.inside.cols = 2
+        self.inside.add_widget(Label(text="First Name"))
+        self.firstName = TextInput(multiline=False)
+        self.inside.add_widget(self.firstName)
+        self.inside.add_widget(Label(text="Last Name"))
+        self.lastName = TextInput(multiline=False)
+        self.inside.add_widget(self.lastName)
+        self.inside.add_widget(Label(text="Email"))
+        self.email = TextInput(multiline=False)
+        self.inside.add_widget(self.email)
+
+        self.add_widget(self.inside)
+        self.submit = Button(text="Submit", font_size=40)
+        self.submit.bind(on_press=self.pressed)
+        self.add_widget(self.submit)
+
+    def pressed(self, instance):
+        print("Welcome To My First Mobile App !!!")
+        print("First Name :" + self.firstName.text + " Last Name:" + self.lastName.text + " Email :" + self.email.text)
+        self.firstName.text = ""
+        self.lastName.text = ""
+        self.email.text = ""
+
+
+class MyApp(App):
+    def build(self):
+        #        return Label(text="Welcome To My First Mobile App !!!")
+        return MyGrid()
+
+
+if __name__ == "__main__":
+    obj = MyApp()
+    obj.run()
+=========================<GRID LAYOUT WITH .kv FILE>===================================
+
+# name the kv against the class name without 'app'
+from tkinter import Widget
+
+import kivy
+from kivy.app import App
+from kivy.uix.label import Label
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
+from kivy.uix.widget import Widget
+from kivy.properties import ObjectProperty
+
+
+class MyGrid(Widget):
+    name = ObjectProperty(None)
+    email = ObjectProperty(None)
+
+    def onSubmit(self):
+        print("Name :", self.name.text , " Email :", self.email.text )
+
+
+class MyApp(App):
+    def build(self):
+        return MyGrid()
+
+
+if __name__ == "__main__":
+    obj = MyApp()
+    obj.run()
+
+==========================================<my.kv>===============================================
+<MyGrid>
+    name : name
+    email : email
+    GridLayout:
+        cols:1
+        size: root.width-200, root.height-200
+        pos: 100,100
+
+        GridLayout:
+            cols:2
+
+            Label:
+                text:"Name :"
+
+            TextInput:
+                id : name
+                multiline:False
+
+            Label:
+                text:"Email :"
+
+            TextInput:
+                id: email
+                multiline:False
+
+        Button:
+            text:"Submit!"
+            on_press : root.onSubmit()
+
+=========================<FLOAT LAYOUT WITH .kv FILE>===================================
+# name the kv against the class name without 'app'
+from tkinter import Widget
+
+import kivy
+from kivy.app import App
+from kivy.uix.floatlayout import FloatLayout
+
+
+class MyApp(App):
+    def build(self):
+        return FloatLayout()
+
+
+if __name__ == "__main__":
+    obj = MyApp()
+    obj.run()
+
+==========================================<my.kv>===========================================
+<Button>:
+    font_size: 40
+    color:0.1,0.1,0.1,1
+    size_hint: 0.3, 0.5
+
+<FloatLayout>:
+    Button:
+        id:btn1
+        pos_hint: {"x":0.5 ,"top":1}
+        text:"Button 1"
+        background_color: [0.1,0.2,0.1,1] if btn1.state == "normal" else [0.1,0.4,0.8,1]
+
+    Button:
+        id: btn2
+        text:"Button 2" if btn2.state == "normal" else "Pressed"
+        background_color: [0.1,0.2,0.1,1] if btn2.state == "normal" else [0.1,0.4,0.8,1]
+
+=========================<MOUSE TOUCH: UP, DOWN, MOVE WITH .kv FILE>===================================
+# name the kv against the class name without 'app'
+from tkinter import Widget
+
+import kivy
+from kivy.app import App
+from kivy.uix.widget import Widget
+
+
+class Touch(Widget):
+    def on_touch_down(self, touch):
+        print("down")
+
+    def on_touch_move(self, touch):
+        print("move")
+
+    def on_touch_up(self, touch):
+        print("up")
+
+
+class MyApp(App):
+    def build(self):
+        return Touch()
+
+
+if __name__ == "__main__":
+    obj = MyApp()
+    obj.run()
+
+==========================================<my.kv>===========================================
+<Touch>:
+    Button:
+        text:"Hello!:)"
+========================================<Canvas>============================================
+# name the kv against the class name without 'app'
+from tkinter import Widget
+
+import kivy
+from kivy.app import App
+from kivy.uix.widget import Widget
+from kivy.graphics import Rectangle
+from kivy.graphics import Color
+from kivy.graphics import Line
+
+
+class Touch(Widget):
+    def __init__(self, **kwargs):
+        super(Touch, self).__init__(**kwargs)
+
+        with self.canvas:
+            Color(1, 0, 0, 0.5, mode='rgba')
+            self.rect = Rectangle(pos=(100, 100), size=(100, 100))
+            Color(1, 0, 1, 0.5, mode='rgba')
+            self.Line = Line(points=(100,220,30,50,80))
+
+    def on_touch_down(self, touch):
+        self.rect.pos = touch.pos
+        print("down")
+
+    def on_touch_move(self, touch):
+        self.rect.pos = touch.pos
+        print("move")
+
+    def on_touch_up(self, touch):
+        print("up")
+
+
+class MyApp(App):
+    def build(self):
+        return Touch()
+
+
+if __name__ == "__main__":
+    obj = MyApp()
+    obj.run()
+
+========================================<moving between windows>===========================================
+# name the kv against the class name without 'app'
+from tkinter import Widget
+
+import kivy
+from kivy.app import App
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen, ScreenManager
+
+
+class MainWindow(Screen):
+    pass
+
+
+class SecondWindow(Screen):
+    pass
+
+
+class WindowManager(ScreenManager):
+    pass
+
+
+kv = Builder.load_file("my.kv")
+
+
+class MyMainApp(App):
+    def build(self):
+        return kv
+
+
+if __name__ == "__main__":
+    obj = MyMainApp()
+    obj.run()
+========================================<my.kv>===========================================
+
+WindowManager:
+    MainWindow:
+    SecondWindow:
+
+<MainWindow>:
+    name:"main"
+
+    GridLayout:
+        cols:1
+
+        GridLayout:
+            cols:2
+
+            Label:
+                text:"Enter Password"
+
+            TextInput:
+                id:password
+                multiline:False
+
+        Button:
+            text:"Submit"
+            on_release:
+                app.root.current = "second" if password.text == "anees" else "main"
+                root.manager.transition.direction = "left"
+
+
+<SecondWindow>:
+    name:"second"
+
+    Button:
+        text:"Go Back!"
+        on_release:
+            app.root.current = "main"
+            root.manager.transition.direction = "right"
+
+========================================<Popup>===========================================
+# name the kv against the class name without 'app'
+from tkinter import Widget
+
+import kivy
+from kivy.app import App
+from kivy.lang import Builder
+from kivy.uix.widget import Widget
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.popup import Popup
+
+
+class Widgets(Widget):
+    def btn(self):
+        show_popup()
+
+
+class P(FloatLayout):
+    pass
+
+
+class MyApp(App):
+    def build(self):
+        return Widgets()
+
+
+def show_popup():
+    show = P()
+
+    popupWindow = Popup(title="This is a popup window", content=show, size_hint=(None, None),size=(300,300))
+
+    popupWindow.open()
+
+
+
+if __name__ == "__main__":
+    obj = MyApp()
+    obj.run()
+========================================<my.kv>===========================================
+<Widgets>:
+    Button:
+        text: "Press!"
+        on_release: root.btn()
+
+<P>:
+    Label:
+        text:"You pressed the button!"
+        size_hint: 0.6,0.2
+        pos_hint:{"x":0.2 , "top": 1}
+
+    Button:
+        text:"You pressed the button!"
+        size_hint: 0.8,0.2
+        pos_hint:{"x":0.1 , "y": 0.1 }
+
+========================================ScrollView===========================================
+
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.button import Button
+from kivy.uix.scrollview import ScrollView
+from kivy.core.window import Window
+from kivy.app import runTouchApp
+
+layout = GridLayout(cols=1, spacing=10, size_hint_y=None)
+# Make sure the height is such that there is something to scroll.
+layout.bind(minimum_height=layout.setter('height'))
+for i in range(100):
+    btn = Button(text=str(i), size_hint_y=None, height=40)
+    layout.add_widget(btn)
+root = ScrollView(size_hint=(1, None), size=(Window.width, Window.height))
+root.add_widget(layout)
+
+runTouchApp(root)
+
+=======================================<MyApp.py Draft-1>==========================================
+from kivy.app import App
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.properties import ObjectProperty
+from kivy.uix.label import Label
+from kivy.clock import Clock
+from kivy.uix.checkbox import CheckBox
+from kivy.uix.textinput import TextInput
+from kivy.uix.popup import Popup
+from kivy.app import App
+from kivy.lang import Builder
+from kivy.uix.recycleview import RecycleView
+from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import StringProperty
+from kivy.uix.recycleview.views import RecycleDataViewBehavior
+
+
+items = [
+    {"text": "white",    "selected": 'normal', "input_data": "white"},
+    {"text": "lightblue","selected": 'normal', "input_data": ""},
+    {"text": "blue",     "selected": 'normal', "input_data": ""},
+    {"text": "gray",     "selected": 'normal', "input_data": ""},
+    {"text": "orange",   "selected": 'normal', "input_data": ""},
+    {"text": "yellow",   "selected": 'normal', "input_data": ""},
+]
+
+
+class MenuScreen(Screen):
+    pass
+
+
+class P(Popup):
+    pass
+
+
+def show_popup():
+    show = P()
+
+    popupWindow = Popup(title="", content=show, size_hint=(None, None), size=(400, 400))
+
+    popupWindow.open()
+
+
+class SettingsScreen(Screen):
+    container = ObjectProperty(None)
+    list = {}
+
+    def __init__(self, **kwargs):
+        super(SettingsScreen, self).__init__(**kwargs)
+        Clock.schedule_once(self.setup_scroll_view, 1)
+
+    def setup_scroll_view(self, dt):
+        self.container.bind(minimum_height=self.container.setter('height'))
+        self.add_text_inputs()
+
+    def add_text_inputs(self):
+        #        for x in range(70):
+        #            self.container.add_widget(Label(text="Label {}".format(x), size_hint_y=None, height=40))
+        file = open("list.txt", 'r')
+        x = 1
+        for line in file.readlines():
+            #            try:
+            check_box = CheckBox(active=False, size_hint_y=None)
+            self.container.add_widget(check_box)
+            label = Label(text=line, size_hint_y=None, height=40)
+            self.container.add_widget(label)
+            text_input = TextInput(multiline=False)
+            self.container.add_widget(text_input)
+
+#            list[x] = [check_box, label, text_input]
+#            x = x+1
+#            except Exception:
+#                print("Exception is caught")
+
+
+class SelectedItems(Screen):
+    container = ObjectProperty(None)
+
+    def __init__(self, **kwargs):
+        super(SelectedItems, self).__init__(**kwargs)
+        print("init is called")
+        Clock.schedule_once(self.setup_scroll_view, 1)
+
+    def setup_scroll_view(self, dt):
+        print("setup_scroll_view is called")
+        self.container.bind(minimum_height=self.container.setter('height'))
+        Clock.schedule_interval(self.add_text_inputs, 3)
+
+    def add_text_inputs(self, dt):
+        print("add_text_inputs is called")
+        #        for x in range(70):
+        #            self.container.add_widget(Label(text="Label {}".format(x), size_hint_y=None, height=40))
+        #        for x in range(20):
+        self.container.clear_widgets()
+
+
+class ScreenManagement(ScreenManager):
+    pass
+
+
+class ChatBot(App):
+
+    def build(self):
+        return ScreenManagement()
+
+
+ChatBot().run()
+===============================================<chatbox.kv>=============================================================
+#:kivy 1.10.0
+
+<But@Button>:
+    font_size: 20
+    font_name: "Calibri"
+    color: 0, 0, 0, 1
+    size_hint: .7, .1
+    background_normal: ''
+    background_down: 'test.png'
+    background_color: .88,.88,.88, 1
+
+<Lab@Label>:
+    font_size: 27
+    font_name: "Calibri"
+    color: 0, 0, 0, 1
+
+<Grid@GridLayout>:
+
+<ScreenManagement>:
+    MenuScreen:
+        name: 'start'
+    SettingsScreen:
+        name: 'game'
+    SelectedItems:
+        name:'selectedItems'
+
+<MenuScreen>:
+
+    FloatLayout:
+        canvas.before:
+            BorderImage:
+                border: 10, 10, 10, 10
+                source: 'Dark-Background.jpg'    # 'Blur-4K-Abstract-Wallpaper.png'
+                pos: self.pos
+                size: self.size
+
+        But:
+            text: "START"
+            pos_hint: {"center_x": .5, "center_y": .3}
+            on_press:
+                root.manager.current = 'game'
+
+        Lab:
+            text: "Welcome to my ChatBot!"
+            pos_hint: {"center_x": .5, "center_y": .8}
+
+
+<SettingsScreen>:
+    container: container
+
+    FloatLayout:
+        canvas.before:
+            BorderImage:
+                border: 10, 10, 10, 10
+                source: 'Dark-Background.jpg'    # 'Dark-Background.jpg'
+                pos: self.pos
+                size: self.size
+
+    GridLayout:
+        rows: 3
+        cols: 1
+        spacing: 5
+        padding: 5
+        font_name: "Calibri"
+
+        Label:
+            text: "Select from the list of Items!"
+            color: 1, 1, 1, 1
+            font_size: 45
+            size_hint: .7, .1
+            background_normal: ''
+            background_color: .88,.88,.88, 1
+
+        ScrollView:
+            size_hint: (1, .9)
+            bar_width: 10
+            bar_color: 1, 0, 0, 1   # red
+            bar_inactive_color: 0, 0, 1, 1   # blue
+            effect_cls: "ScrollEffect"
+            scroll_type: ['bars']
+
+            GridLayout:
+                id: container
+                size_hint_y: None
+                cols:3
+
+
+        BoxLayout:
+            spacing: 5
+            size_hint: .7, .1
+
+            Button:
+                id: entry
+                text:"Back to Home"
+                color: 0, 0, 0, 1
+                background_normal: 'send.jpg'
+                background_down: 'test.jpg'
+                background_color: .88,.88,.88, 1
+                size_hint: .5, 1
+                on_press:
+                    app.root.current = "start"
+                    root.manager.transition.direction = "right"
+
+            Button:
+                id: send
+                text:"Done"
+                color: 0, 0, 0, 1
+                background_normal: 'send.jpg'
+                background_down: 'test.jpg'
+                background_color: .88,.88,.88, 1
+                size_hint: .5, 1
+                on_press:
+                    app.root.current = "selectedItems"
+                    root.manager.transition.direction = "left"
+
+<SelectedItems>:
+    container: container
+
+    FloatLayout:
+        canvas.before:
+            BorderImage:
+                border: 10, 10, 10, 10
+                source: 'Dark-Background.jpg'    # 'Dark-Background.jpg'
+                pos: self.pos
+                size: self.size
+
+    GridLayout:
+        rows: 4
+        cols: 1
+        spacing: 5
+        padding: 5
+        font_name: "Calibri"
+
+        Label:
+            text: "Enjoy Shopping!"
+            color: 1, 1, 1, 1
+            font_size: 45
+            size_hint: .7, .1
+            background_normal: ''
+            background_color: .88,.88,.88, 1
+
+
+        ScrollView:
+            size_hint: (1, .9)
+            bar_width: 10
+            bar_color: 1, 0, 0, 1   # red
+            bar_inactive_color: 0, 0, 1, 1   # blue
+            effect_cls: "ScrollEffect"
+            scroll_type: ['bars']
+
+            GridLayout:
+                id: container
+                size_hint_y: None
+                cols:2
+
+
+        BoxLayout:
+            spacing: 5
+            size_hint: .7, .1
+
+            Button:
+                id: entry
+                text:"Update List"
+                color: 0, 0, 0, 1
+                background_normal: 'send.jpg'
+                background_down: 'test.jpg'
+                background_color: .88,.88,.88, 1
+                size_hint: .5, 1
+                on_press:
+                    app.root.current = "game"
+                    root.manager.transition.direction = "right"
+
+            Button:
+                id: send
+                text:"Home"
+                color: 0, 0, 0, 1
+                background_normal: 'send.jpg'
+                background_down: 'test.jpg'
+                background_color: .88,.88,.88, 1
+                size_hint: .5, 1
+                on_press:
+                    app.root.current = "start"
+                    root.manager.transition.direction = "right"
+
+
+
+<P>:
+    Label:
+        text:"Oops! You Missed to update the quantity"
+        size_hint: 0.6,0.2
+        pos_hint:{"center_x":0.5 , "center_y": 0.5}
+
+=======================================<MyApp.py Draft-2>==========================================
+
+from kivy.app import App
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.properties import ObjectProperty
+from kivy.app import App
+from kivy.lang import Builder
+from kivy.uix.recycleview import RecycleView
+from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import StringProperty
+from kivy.uix.recycleview.views import RecycleDataViewBehavior
+
+items = [
+    {"text": "Egg", "selected": 'normal', "input_data": ""},
+    {"text": "Rice", "selected": 'normal', "input_data": ""},
+    {"text": "Wheat", "selected": 'normal', "input_data": ""},
+    {"text": "Jaggery", "selected": 'normal', "input_data": ""},
+    {"text": "Sugar", "selected": 'normal', "input_data": ""},
+    {"text": "Sugar", "selected": 'normal', "input_data": ""},
+    {"text": "Potato", "selected": 'normal', "input_data": "white"},
+    {"text": "Cabbage", "selected": 'normal', "input_data": ""},
+    {"text": "Cauliflower", "selected": 'normal', "input_data": ""},
+    {"text": "Ghee", "selected": 'normal', "input_data": ""},
+    {"text": "Groundnut Oil", "selected": 'normal', "input_data": ""},
+    {"text": "Coconut", "selected": 'normal', "input_data": ""},
+    {"text": "Peas", "selected": 'normal', "input_data": "white"},
+    {"text": "Chillies", "selected": 'normal', "input_data": ""},
+    {"text": "Ketchup", "selected": 'normal', "input_data": ""},
+    {"text": "Jam", "selected": 'normal', "input_data": ""},
+    {"text": "Rice FLour", "selected": 'normal', "input_data": ""},
+    {"text": "Cumin", "selected": 'normal', "input_data": ""},
+]
+
+
+class MenuScreen(Screen):
+    pass
+
+
+class MyViewClass(RecycleDataViewBehavior, BoxLayout):
+    text = StringProperty("")
+    text_input = StringProperty("")
+    index = None
+
+    def set_state(self, state, app):
+        app.root.get_screen('game').container.data[self.index]['selected'] = state
+
+    def set_input(self, text, app):
+       app.root.get_screen('game').container.data[self.index]['input_data'] = text
+
+    def refresh_view_attrs(self, rv, index, data):
+        self.index = index
+        return super(MyViewClass, self).refresh_view_attrs(rv, index, data)
+
+
+class MyRecycleView(RecycleView):
+    data = items
+
+    def print_data(self, data):
+        print([item['input_data'] for item in data if item['selected'] == 'down'])
+
+class SettingsScreen(Screen):
+    container = ObjectProperty(None)
+
+class SelectedItems(Screen):
+    pass
+
+
+class ScreenManagement(ScreenManager):
+    pass
+
+
+class ChatBot(App):
+
+    def build(self):
+        return ScreenManagement()
+
+
+ChatBot().run()
+
+===============================================<chatbox.kv>=============================================================
+#:kivy 1.10.0
+
+<But@Button>:
+    font_size: 20
+    font_name: "Calibri"
+    color: 0, 0, 0, 1
+    size_hint: .7, .1
+    background_normal: 'send.jpg'
+    background_down: 'test.jpg'
+    background_color: .88,.88,.88, 1
+
+<Lab@Label>:
+    font_size: 30
+    font_name: "Calibri"
+    color: 1, 1, 0, 1
+
+<Grid@GridLayout>:
+
+<ScreenManagement>:
+    MenuScreen:
+        name: 'start'
+    SettingsScreen:
+        name: 'game'
+    SelectedItems:
+        name:'selectedItems'
+
+<MenuScreen>:
+
+    FloatLayout:
+        canvas.before:
+            BorderImage:
+                border: 10, 10, 10, 10
+                source: 'Dark-Background.png'
+                pos: self.pos
+                size: self.size
+
+        But:
+            text: "MAIN ITEMS"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_press:
+                root.manager.current = 'game'
+
+        But:
+            text: "SELECTED ITEMS"
+            pos_hint: {"center_x": .5, "center_y": .3}
+            on_press:
+                root.manager.current = 'selectedItems'
+
+        Lab:
+            text: "Welcome to My Grocery App!"
+            pos_hint: {"center_x": .5, "center_y": .8}
+
+
+<MyViewClass>:
+    orientation: 'horizontal'
+    CheckBox:
+        on_state: root.set_state(self.state,app)
+    Label:
+        font_size : 20
+        font_name : "Calibri"
+        text: root.text
+    TextInput:
+        on_text : root.set_input(self.text,app)
+        multiline: False
+
+
+<SettingsScreen>:
+    container:rv
+    FloatLayout:
+        canvas.before:
+            BorderImage:
+                border: 10, 10, 10, 10
+                source: 'SettingScreen.jpg'
+                pos: self.pos
+                size: self.size
+
+    GridLayout:
+        rows: 3
+        cols: 1
+        spacing: 5
+        padding: 5
+        font_name: "Calibri"
+
+        Label:
+            text: "Select from the list of Items!"
+            color: 1, 1, 1, 1
+            font_size: 45
+            size_hint: .7, .1
+            background_normal: ''
+            background_color: .88,.88,.88, 1
+
+        BoxLayout:
+            orientation: 'vertical'
+            MyRecycleView:
+                id: rv
+                viewclass: 'MyViewClass'
+                RecycleBoxLayout:
+                    orientation: 'vertical'
+                    default_size: None, dp(80)
+                    default_size_hint: 1, None
+                    size_hint_y: None
+                    height: self.minimum_height
+
+        BoxLayout:
+            spacing: 5
+            size_hint: .7, .1
+
+            Button:
+                id: entry
+                text:"Back to Home"
+                color: 0, 0, 0, 1
+                background_normal: 'Button.jpg'
+                background_down: 'test.jpg'
+                background_color: .88,.88,.88, 1
+                size_hint: .5, 1
+                on_press:
+                    app.root.current = "start"
+                    root.manager.transition.direction = "right"
+
+            Button:
+                id: send
+                text:"Done"
+                color: 0, 0, 0, 1
+                background_normal: 'Button.jpg'
+                background_down: 'test.jpg'
+                background_color: .88,.88,.88, 1
+                size_hint: .5, 1
+                on_release:
+                    app.root.current = "selectedItems"
+                    root.manager.transition.direction = "left"
+                on_press:
+                    root.manager.get_screen('selectedItems').add_text_inputs()
+
+<SelectedItems>:
+    container: container
+
+    FloatLayout:
+        canvas.before:
+            BorderImage:
+                border: 10, 10, 10, 10
+                source: 'SelectedItems.jpg'    # 'Dark-Background.jpg'
+                pos: self.pos
+                size: self.size
+
+    GridLayout:
+        rows: 4
+        cols: 1
+        spacing: 5
+        padding: 5
+        font_name: "Calibri"
+
+        Label:
+            text: "Enjoy Shopping!"
+            color: 1, 1, 1, 1
+            font_size: 45
+            size_hint: .7, .1
+            background_normal: ''
+            background_color: .88,.88,.88, 1
+
+
+        ScrollView:
+            size_hint: (1, .9)
+            bar_width: 10
+            bar_color: 1, 0, 0, 1   # red
+            bar_inactive_color: 0, 0, 1, 1   # blue
+            effect_cls: "ScrollEffect"
+            scroll_type: ['bars']
+
+            GridLayout:
+                id: container
+                size_hint_y: None
+                cols:2
+
+
+        BoxLayout:
+            spacing: 5
+            size_hint: .7, .1
+
+            Button:
+                id: entry
+                text:"Update List"
+                color: 0, 0, 0, 1
+                background_normal: 'send.jpg'
+                background_down: 'test.jpg'
+                background_color: .88,.88,.88, 1
+                size_hint: .5, 1
+                on_press:
+                    app.root.current = "game"
+                    root.manager.transition.direction = "right"
+
+            Button:
+                id: send
+                text:"Home"
+                color: 0, 0, 0, 1
+                background_normal: 'send.jpg'
+                background_down: 'test.jpg'
+                background_color: .88,.88,.88, 1
+                size_hint: .5, 1
+                on_press:
+                    app.root.current = "start"
+                    root.manager.transition.direction = "right"
+===============================================<RecycleView.py>=============================================================
+
+from kivy.app import App
+from kivy.lang import Builder
+from kivy.uix.recycleview import RecycleView
+from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import StringProperty
+from kivy.uix.recycleview.views import RecycleDataViewBehavior
+
+
+
+items = [
+    {"text": "white",    "selected": 'normal', "input_data": "white"},
+    {"text": "lightblue","selected": 'normal', "input_data": ""},
+    {"text": "blue",     "selected": 'normal', "input_data": ""},
+    {"text": "gray",     "selected": 'normal', "input_data": ""},
+    {"text": "orange",   "selected": 'normal', "input_data": ""},
+    {"text": "yellow",   "selected": 'normal', "input_data": ""},
+]
+
+class MyViewClass(RecycleDataViewBehavior, BoxLayout):
+
+    text = StringProperty("")
+    text_input = StringProperty("")
+    index = None
+
+    def set_state(self,state,app):
+        app.root.ids.rv.data[self.index]['selected'] = state
+
+    def set_input(self,text,app):
+        print(text)
+        app.root.ids.rv.data[self.index]['input_data'] = text
+
+    def refresh_view_attrs(self, rv, index, data):
+        self.index = index
+        return super(MyViewClass, self).refresh_view_attrs(rv, index, data)
+
+
+
+class MyRecycleView(RecycleView):
+
+    data = items
+
+    def print_data(self,data):
+        print([item['input_data'] for item in data if item['selected'] == 'down'])
+
+
+KV = '''
+
+<MyViewClass>:
+    orientation: 'horizontal'
+    CheckBox:
+        on_state: root.set_state(self.state,app)
+    Label:
+        text: root.text
+    TextInput:
+        on_text : root.set_input(self.text,app)
+        multiline: False
+
+
+BoxLayout:
+    orientation: 'vertical'
+    MyRecycleView:
+        id: rv
+        viewclass: 'MyViewClass'
+        RecycleBoxLayout:
+            orientation: 'vertical'
+            default_size: None, dp(56)
+            default_size_hint: 1, None
+            size_hint_y: None
+            height: self.minimum_height
+    Button:
+        size_hint_y: 0.1
+        text: "Print data"
+        on_release: rv.print_data(rv.data)
+
+'''
+
+class Test(App):
+    def build(self):
+        root = Builder.load_string(KV)
+        return root
+
+
+Test().run()

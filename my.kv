@@ -1,0 +1,201 @@
+#:kivy 1.10.0
+
+<But@Button>:
+    font_size: 20
+    font_name: "Calibri"
+    color: 0, 0, 0, 1
+    size_hint: .7, .1
+    background_normal: 'send.jpg'
+    background_down: 'test.jpg'
+    background_color: .88,.88,.88, 1
+
+<Lab@Label>:
+    font_size: 30
+    font_name: "Calibri"
+    color: 1, 1, 0, 1
+
+<Grid@GridLayout>:
+
+<ScreenManagement>:
+    MenuScreen:
+        name: 'start'
+    SettingsScreen:
+        name: 'game'
+    SelectedItems:
+        name:'selectedItems'
+
+<MenuScreen>:
+
+    FloatLayout:
+        canvas.before:
+            BorderImage:
+                border: 10, 10, 10, 10
+                source: 'Dark-Background.png'
+                pos: self.pos
+                size: self.size
+
+        But:
+            text: "MAIN ITEMS"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_press:
+                root.manager.current = 'game'
+
+        But:
+            text: "SELECTED ITEMS"
+            pos_hint: {"center_x": .5, "center_y": .3}
+            on_press:
+                root.manager.current = 'selectedItems'
+
+        Lab:
+            text: "Welcome to My Grocery App!"
+            pos_hint: {"center_x": .5, "center_y": .8}
+
+
+<MyViewClass>:
+    orientation: 'horizontal'
+    CheckBox:
+        on_state: root.set_state(self.state,app)
+    Label:
+        font_size : 20
+        font_name : "Calibri"
+        text: root.text
+    TextInput:
+        on_text : root.set_input(self.text,app)
+        multiline: False
+
+
+<SettingsScreen>:
+    container:rv
+    FloatLayout:
+        canvas.before:
+            BorderImage:
+                border: 10, 10, 10, 10
+                source: 'SettingScreen.jpg'
+                pos: self.pos
+                size: self.size
+
+    GridLayout:
+        rows: 3
+        cols: 1
+        spacing: 5
+        padding: 5
+        font_name: "Calibri"
+
+        Label:
+            text: "Select from the list of Items!"
+            color: 1, 1, 1, 1
+            font_size: 45
+            size_hint: .7, .1
+            background_normal: ''
+            background_color: .88,.88,.88, 1
+
+        BoxLayout:
+            orientation: 'vertical'
+            MyRecycleView:
+                id: rv
+                viewclass: 'MyViewClass'
+                RecycleBoxLayout:
+                    orientation: 'vertical'
+                    default_size: None, dp(80)
+                    default_size_hint: 1, None
+                    size_hint_y: None
+                    height: self.minimum_height
+
+        BoxLayout:
+            spacing: 5
+            size_hint: .7, .1
+
+            Button:
+                id: entry
+                text:"Back to Home"
+                color: 0, 0, 0, 1
+                background_normal: 'Button.jpg'
+                background_down: 'test.jpg'
+                background_color: .88,.88,.88, 1
+                size_hint: .5, 1
+                on_press:
+                    app.root.current = "start"
+                    root.manager.transition.direction = "right"
+
+            Button:
+                id: send
+                text:"Done"
+                color: 0, 0, 0, 1
+                background_normal: 'Button.jpg'
+                background_down: 'test.jpg'
+                background_color: .88,.88,.88, 1
+                size_hint: .5, 1
+                on_release:
+                    app.root.current = "selectedItems"
+                    root.manager.transition.direction = "left"
+                on_press:
+                    root.manager.get_screen('selectedItems').add_text_inputs()
+
+<SelectedItems>:
+    container: container
+
+    FloatLayout:
+        canvas.before:
+            BorderImage:
+                border: 10, 10, 10, 10
+                source: 'SelectedItems.jpg'    # 'Dark-Background.jpg'
+                pos: self.pos
+                size: self.size
+
+    GridLayout:
+        rows: 4
+        cols: 1
+        spacing: 5
+        padding: 5
+        font_name: "Calibri"
+
+        Label:
+            text: "Enjoy Shopping!"
+            color: 1, 1, 1, 1
+            font_size: 45
+            size_hint: .7, .1
+            background_normal: ''
+            background_color: .88,.88,.88, 1
+
+
+        ScrollView:
+            size_hint: (1, .9)
+            bar_width: 10
+            bar_color: 1, 0, 0, 1   # red
+            bar_inactive_color: 0, 0, 1, 1   # blue
+            effect_cls: "ScrollEffect"
+            scroll_type: ['bars']
+
+            GridLayout:
+                id: container
+                size_hint_y: None
+                cols:2
+
+
+        BoxLayout:
+            spacing: 5
+            size_hint: .7, .1
+
+            Button:
+                id: entry
+                text:"Update List"
+                color: 0, 0, 0, 1
+                background_normal: 'send.jpg'
+                background_down: 'test.jpg'
+                background_color: .88,.88,.88, 1
+                size_hint: .5, 1
+                on_press:
+                    app.root.current = "game"
+                    root.manager.transition.direction = "right"
+
+            Button:
+                id: send
+                text:"Home"
+                color: 0, 0, 0, 1
+                background_normal: 'send.jpg'
+                background_down: 'test.jpg'
+                background_color: .88,.88,.88, 1
+                size_hint: .5, 1
+                on_press:
+                    app.root.current = "start"
+                    root.manager.transition.direction = "right"
